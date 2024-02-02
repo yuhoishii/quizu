@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+    <link rel="stylesheet" href="eva.css">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>動的問題数の3択クイズ</title>
+  
+</head>
+<body>
+    <h1 class="title">エヴァンゲリオンの3択クイズ</h1>
+    <label for="numberOfQuestions">出題する問題数を入力してください:</label>
+    <input type="number" id="numberOfQuestions" min="1" step="1">
+    <button onclick="startQuiz()">クイズスタート</button>
+    <div id="question"></div>
+    <div class="option" onclick="checkAnswer(0)"></div>
+    <div class="option" onclick="checkAnswer(1)"></div>
+    <div class="option" onclick="checkAnswer(2)"></div>
+    <p id="result"></p>
+
+    <script class="mondai">
+        var currentQuestion = 0;
+        var score = 0;
+        var numberOfQuestions;
+    
+        var questions = [
+            {
+                question: "劇場版エヴァの中でカヲル君は何番目の使途として登場した？",
+                options: [ "13", "5", "14"],
+                correctAnswer: 0
+            },
+            {
+                question: "アンチATフィールドを常に展開している槍状のチート武器の名前は？",
+                options: ["ロンギヌスの槍", "カシウスの槍", "ノアの箱舟"],
+                correctAnswer: 0
+            },
+            {
+                question: "葛城ミサトのネルフでの階級は？",
+                options: [ "一佐", "少尉", "研究長"],
+                correctAnswer: 0
+            },
+            {
+                question: "フォースチルドレンの名前は？",
+                options: ["碇シンジ", "鈴原トウジ", "相田ケンスケ"],
+                correctAnswer: 1
+            },
+            {
+                question: "シンジ君が通っていた高校の隠された秘密は？",
+                options: [ "生徒全員がチルドレンの素質あり", "名前に「い行」が入っている", "全員セカンドインパクトの後遺症がある"],
+                correctAnswer: 0
+            },
+            {
+                question: "シンジ君が一番最初に戦った使徒の名前は？",
+                options: ["ラミエル", "サリエル", "バルディエル"],
+                correctAnswer: 1
+            },
+            {
+                question: "初号機はシンジ君の前は誰が乗ろうとしていた？",
+                options: [ "碇ゲンドウ", "惣流・アスカ・ラングレー", "綾波レイ"],
+                correctAnswer: 2
+            },
+            {
+                question: "シンジ君の友達の健介の趣味は？",
+                options: ["使徒の研究", "ネルフへの侵入", "サバイバル"],
+                correctAnswer: 2
+            },
+            {
+                question: "２号機の登場者の名前は？",
+                options: [ "綾波レイ", "マリ", "アスカ"],
+                correctAnswer: 2
+            },
+            {
+                question: "綾波レイは何をモデルに作られた？",
+                options: ["シンジ君の妹", "シンジ君の母親", "碇ゲンドウの妹"],
+                correctAnswer: 1
+            },
+            {
+                question: "第五使徒を倒すための作戦名は？",
+                options: [ "ヤシオリ作戦", "ヤシマ作戦", "カワシマ作戦"],
+                correctAnswer: 1
+            },
+            {
+                question: "ネルフが計画していた世界計画の名前は「人類〇〇計画」丸の部分の文字は？",
+                options: ["補完", "保存", "保全"],
+                correctAnswer: 0
+            },
+            {
+                question: "エヴァに出てくる架空のバリアの名前は？",
+                options: [ "N2シールド", "ATフィールド", "耐熱光波防御盾"],
+                correctAnswer: 1
+            },
+            {
+                question: "葛城ミサトの元カレの名前は？",
+                options: ["碇ゲンドウ", "赤城リツコ", "加持リョウジ"],
+                correctAnswer: 2
+            },
+            {
+                question: "アスカの綾波の呼び方は？",
+                options: [ "ナナヒカリ", "エコヒイキ", "わんこ君"],
+                correctAnswer: 1
+            },
+            {
+                question: "アニメでのエヴァ８号機の搭乗者は？",
+                options: ["アスカ", "マリ", "綾波レイ"],
+                correctAnswer: 1
+            },
+            {
+                question: "アニメや漫画で最初に覚醒したエヴァは何号機？",
+                options: [ "弐号機", "初号機", "十三号機"],
+                correctAnswer: 1
+            },
+            {
+                question: "月で開発された機体の名前は？",
+                options: ["ルナムーン", "Mark6", "８号機"],
+                correctAnswer: 1
+            },
+            {
+                question: "劇場版の「Q」でカヲル君が首につけていた物の名前は？",
+                options: [ "DSSチョーカー", "EDFチョーカー", "緊急処置システム"],
+                correctAnswer: 0
+            },
+            {
+                question: "アスカはどこの国から来た？",
+                options: ["イギリス", "USA", "フランス"],
+                correctAnswer: 1
+            },
+            {
+                question: "アスカがシンジ君を呼ぶときの呼び方は？",
+                options: [ "シンちゃん", "バカシンジ", "エコヒイキ"],
+                correctAnswer: 1
+            },
+            {
+                question: "エヴァンゲリオンのOP曲は？",
+                options: ["魂のルフラン", "翼をください", "残酷な天使のテーゼ"],
+                correctAnswer: 2
+            },
+            {
+                question: "EVAの有名なED曲は？",
+                options: [ "残酷な天使のテーゼ", "魂のルフラン", "翼をください"],
+                correctAnswer: 1
+            },
+            {
+                question: "ミサトさんのセリフでの穴埋め「風呂は〇〇〇〇よ♪」〇の部分にはいる言葉は？",
+                options: ["命の回復", "命の休息", "命の洗濯"],
+                correctAnswer: 2
+            },
+            {
+                question: "カヲル君はアダム、じゃあ綾波は？",
+                options: [ "イブ", "ゼウス", "リリス"],
+                correctAnswer: 2
+            },
+            {
+                question: "劇場版での零号機は黄色だが、アニメ版の零号機改の色は何色でしょう？",
+                options: ["変わらない", "赤", "青"],
+                correctAnswer: 2
+            },
+            {
+                question: "ATフィールドを司り、生の象徴として完成した槍状の武器の名前",
+                options: [ "ロンギヌスの槍", "カシウスの槍", "ゼレフの槍"],
+                correctAnswer: 1
+            },
+            {
+                question: "碇ゲンドウが最も愛していた人物は？",
+                options: ["碇シンジ", "赤城リツコ", "碇ゆい"],
+                correctAnswer: 2
+            },
+            {
+                question: "エヴァの世界でミサトさん達人類は第何使徒と言ったでしょう？",
+                options: [ "1", "18", "使徒ではない"],
+                correctAnswer: 1
+            },
+            {
+                question: "劇場版Qでミサトさんが作りあげた対ネルフ組織の名前は？",
+                options: ["WILLE", "resistance", "NERV改"],
+                correctAnswer: 0
+            },
+            {
+                question: "ミサトさん家にいる温泉ペンギンの名前は？",
+                options: ["リンリン", "カンカン", "ぺんぺん"],
+                correctAnswer: 2
+            },
+            // 他の問題も同様に追加
+        ];
+
+        function startQuiz() {
+            // 入力された問題数を取得
+            numberOfQuestions = document.getElementById("numberOfQuestions").value;
+
+            // 入力が数字かどうかを確認
+            if (isNaN(numberOfQuestions) || numberOfQuestions < 31) {
+                alert("無効な問題数です。1以上の数字を入力してください。");
+                return;
+            }
+
+            // 問題を複製して指定された問題数になるようにする
+            for (var i = 0; i < numberOfQuestions - 1; i++) {
+                questions = questions.concat(JSON.parse(JSON.stringify(questions)));
+            }
+
+            // クイズを開始
+            shuffleQuestions();
+            loadQuestion();
+        }
+
+        function shuffleQuestions() {
+            // 問題をランダムにシャッフル
+            questions.sort(function() {
+                return 0.5 - Math.random();
+            });
+        }
+
+        function loadQuestion() {
+            var questionDiv = document.getElementById("question");
+            var optionDivs = document.getElementsByClassName("option");
+
+            if (currentQuestion < questions.length) {
+                var currentQ = questions[currentQuestion];
+                questionDiv.textContent = currentQ.question;
+
+                for (var i = 0; i < optionDivs.length; i++) {
+                    optionDivs[i].textContent = currentQ.options[i];
+                }
+            } else {
+                // 全ての問題が終了した場合
+                questionDiv.textContent = "クイズ終了！スコア: " + score + "/" + numberOfQuestions;
+                for (var i = 0; i < optionDivs.length; i++) {
+                    optionDivs[i].style.display = "none";
+                }
+            }
+        }
+
+        function checkAnswer(optionIndex) {
+            var currentQ = questions[currentQuestion];
+
+            if (optionIndex === currentQ.correctAnswer) {
+                document.getElementById("result").textContent = "正解！";
+                score++;
+            } else {
+                document.getElementById("result").textContent = "不正解。正解は " + currentQ.options[currentQ.correctAnswer];
+            }
+
+            // 次の問題へ進む
+            currentQuestion++;
+            loadQuestion();
+          
+        }
+    </script>
+</body>
+</html>
